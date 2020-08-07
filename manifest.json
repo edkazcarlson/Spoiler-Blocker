@@ -1,0 +1,11 @@
+  {
+    "name": "Spoiler blocker",
+    "version": "1.0",
+    "description": "Blocks spoilers",
+    "content_scripts": [{
+        "matches": ["<all_urls>"],
+        "js": ["jquery-2.2.0.min.js", "blocker.js"],
+        "run_at": "document_start"
+    }],
+    "manifest_version": 2
+  }
