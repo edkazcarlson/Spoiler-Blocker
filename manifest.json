@@ -1,9 +1,9 @@
   {
     "name": "Spoiler blocker",
-    "version": "1.0",
-    "description": "Blocks spoilers",
+    "version": "0.1",
+    "description": "Blocks spoilers for non completed anime on myanimstlist",
     "content_scripts": [{
-        "matches": ["<all_urls>"],
+        "matches": ["https://www.youtube.com/*"],
         "js": ["jquery-2.2.0.min.js", "blocker.js"],
         "run_at": "document_start"
     }],
@@ -13,5 +13,6 @@
     "permissions": [
       "storage"
     ],
+    "icons": {"128": "/icons/128icon.png" },
     "manifest_version": 2
   }

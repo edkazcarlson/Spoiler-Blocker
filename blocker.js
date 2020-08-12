@@ -19,10 +19,8 @@ window.onload = async function(){
 	MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 	var observer = new MutationObserver(function(mutations, observer) {
 		let autoCompleteWatchingReady = null;
-		console.log('mutation fired')
 		let serachVal = $('input[name = "search_query"]')[0].value.split(' ');
 		if (serachVal[serachVal.length - 1] != '' && 'death'.indexOf(serachVal[serachVal.length - 1]) == 0){
-			console.log('turn off blocker')
 			autoCompleteWatchingReady = false
 		} else {
 			autoCompleteWatchingReady = true;
