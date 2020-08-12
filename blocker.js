@@ -1,3 +1,4 @@
+let importantCharSet = '';
 async function getLocalStorageValue(key) {
     return new Promise((resolve, reject) => {
         try {
@@ -11,40 +12,41 @@ async function getLocalStorageValue(key) {
     });
 }
 
-let importantCharSet = '';
 window.onload = async function(){
 	importantCharSet= await getLocalStorageValue('names');
 	importantCharSet = new Set(importantCharSet.names);
-}
 
-let autoCompleteWatchingReady = false;
-window.onkeyup = function(){
-    autoCompleteWatchingReady = true;
-}
-
-
-MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
-
-var observer = new MutationObserver(function(mutations, observer) {
-	// fired when a mutation occurs
-	if (autoCompleteWatchingReady){
-		$('.sbqs_c:contains("death")').each(function(idx, val){
-			let deathLineSet = new Set(val.innerText.toLowerCase().split(' '));
-			let intersection = new Set([...deathLineSet].filter(x => importantCharSet.has(x)));
-			if (intersection.size > 0){
-				val.innerHTML = val.innerHTML.replace('death', 'fight');
+	MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+	var observer = new MutationObserver(function(mutations, observer) {
+		let autoCompleteWatchingReady = null;
+		console.log('mutation fired')
+		let serachVal = $('input[name = "search_query"]')[0].value.split(' ');
+		if (serachVal[serachVal.length - 1] != '' && 'death'.indexOf(serachVal[serachVal.length - 1]) == 0){
+			console.log('turn off blocker')
+			autoCompleteWatchingReady = false
+		} else {
+			autoCompleteWatchingReady = true;
+		}
+		if (autoCompleteWatchingReady){
+			for (var x in mutations){
+				if (mutations[x].type == 'childList' && mutations[x].addedNodes.length == 2){
+					let curMutation = mutations[x].target;
+					if (curMutation.innerText.includes('death')){
+						let deathLineSet = new Set(curMutation.innerText.toLowerCase().split(' '));
+						let intersection = new Set([...deathLineSet].filter(x => importantCharSet.has(x)));
+						if (intersection.size > 0){
+							curMutation.innerHTML = curMutation.innerHTML.replace('death', 'fight');
+						}
+					}
+				}
+	
 			}
-			if (idx >= 14){
-				return false;
-			}
-		});   
-		autoCompleteWatchingReady = false;          
-	}
-});
-
-observer.observe(document, {
-    subtree: true,
-    attributes: true,
-    childList: true,
-    // characterData: true
-});
+		} 
+	});
+	observer.observe(document, {
+		subtree: true,
+		attributes: true,
+		childList: true,
+		characterData: true
+	});
+}
